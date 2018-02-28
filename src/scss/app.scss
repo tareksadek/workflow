@@ -3,3 +3,11 @@ $black: #ffffff;
 body{
 	background-color:$black;
 }
+
+h1{
+	color:#ff0000;
+}
+h1:hover{
+	transition: color 1s ease;
+	opacity: 0.8;
+}
