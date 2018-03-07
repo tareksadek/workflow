@@ -23,6 +23,7 @@
   "homepage": "https://github.com/tareksadek/workflow#readme",
   "devDependencies": {
     "bootstrap": "^4.0.0",
+    "font-awesome": "^4.7.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-browserify": "^0.5.1",

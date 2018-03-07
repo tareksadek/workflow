@@ -4,5 +4,5 @@ popper = require('popper.js/dist/umd/popper.min.js');
 mustache = require('mustache');
 
 $('document').ready(function(){
-	alert('hello');
+	
 });

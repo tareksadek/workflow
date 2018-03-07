@@ -17358,7 +17358,7 @@ popper = require('popper.js/dist/umd/popper.min.js');
 mustache = require('mustache');
 
 $('document').ready(function(){
-	alert('hello');
+	
 });
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"bootstrap":1,"jquery":2,"mustache":3,"popper.js/dist/umd/popper.min.js":5}]},{},[6])
