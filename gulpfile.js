@@ -10,6 +10,7 @@ var merge = require('merge-stream');
 var newer = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
 var injectPartials = require('gulp-inject-partials');
+var minify = require('gulp-minify');
 
 var SOURCEPATHS = {
 		sassSource       : 'src/scss/*.scss',
@@ -76,6 +77,14 @@ gulp.task('javascript', ['clean-javascript'], function(){
 	gulp.src(SOURCEPATHS.jsSource)
 	.pipe(concat('main.js'))
 	.pipe(browserify())
+	.pipe(gulp.dest(APPPATHS.js));
+});
+
+gulp.task('compress', ['clean-javascript'], function(){
+	gulp.src(SOURCEPATHS.jsSource)
+	.pipe(concat('main.js'))
+	.pipe(browserify())
+	.pipe(minify())
 	.pipe(gulp.dest(APPPATHS.js));
 });
 
