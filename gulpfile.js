@@ -11,6 +11,9 @@ var newer = require('gulp-newer');
 var imagemin = require('gulp-imagemin');
 var injectPartials = require('gulp-inject-partials');
 var minify = require('gulp-minify');
+var cssmin = require('gulp-cssmin');
+var rename = require('gulp-rename');
+var htmlmin = require('gulp-htmlmin');
 
 var SOURCEPATHS = {
 		sassSource       : 'src/scss/*.scss',
@@ -80,13 +83,6 @@ gulp.task('javascript', ['clean-javascript'], function(){
 	.pipe(gulp.dest(APPPATHS.js));
 });
 
-gulp.task('compress', ['clean-javascript'], function(){
-	gulp.src(SOURCEPATHS.jsSource)
-	.pipe(concat('main.js'))
-	.pipe(browserify())
-	.pipe(minify())
-	.pipe(gulp.dest(APPPATHS.js));
-});
 
 gulp.task('clean-javascript', function(){
 	return gulp.src(APPPATHS.js + '/*.js', {read:false, force: true})
@@ -98,6 +94,40 @@ gulp.task('fontawesome', function(){
 	.pipe(gulp.dest(APPPATHS.fonts));
 });
 
+// Production tasks
+
+gulp.task('compressjs', function(){
+	gulp.src(SOURCEPATHS.jsSource)
+	.pipe(concat('main.js'))
+	.pipe(browserify())
+	.pipe(minify())
+	.pipe(gulp.dest(APPPATHS.js));
+});
+
+gulp.task('compresscss', function(){
+	var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
+	var sassFiles;
+	
+	sassFiles = gulp.src(SOURCEPATHS.sassSource)
+	.pipe(autoprefixer('last 2 versions'))
+	.pipe(sass({outputStyle:'expanded'}).on('error', sass.logError))
+	
+	return merge(bootstrapCSS, sassFiles)
+	.pipe(concat('app.css'))
+	.pipe(cssmin())
+	.pipe(rename({suffix: '.min'}))
+	.pipe(gulp.dest(APPPATHS.css));
+});
+
+gulp.task('compresshtml', function(){
+	return gulp.src(SOURCEPATHS.htmlSource)
+	.pipe(injectPartials())
+	.pipe(htmlmin({collapseWhitespace: true}))
+	.pipe(gulp.dest(APPPATHS.root))
+});
+
+// End of production tasks
+
 gulp.task('watch', ['serve','sass','html', 'clean-html', 'javascript', 'clean-javascript', 'fontawesome', 'images'], function(){
 	gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 	//gulp.watch([SOURCEPATHS.htmlSource], ['copy']);
@@ -106,3 +136,5 @@ gulp.task('watch', ['serve','sass','html', 'clean-html', 'javascript', 'clean-ja
 });
 
 gulp.task('default', ['watch']);
+
+gulp.task('production', ['compressjs', 'compresscss', 'compresshtml']);
