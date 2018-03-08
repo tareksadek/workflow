@@ -7,20 +7,31 @@ var browserify = require('gulp-browserify');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
 var merge = require('merge-stream');
+var newer = require('gulp-newer');
+var imagemin = require('gulp-imagemin');
 
 var SOURCEPATHS = {
 		sassSource       : 'src/scss/*.scss',
 		htmlSource       : 'src/*.html',
 		jsSource         : 'src/js/*.js',
-		fontawesomeSource: 'node_modules/font-awesome/fonts/**'
+		fontawesomeSource: 'node_modules/font-awesome/fonts/**',
+		imgSource        : 'src/img/**'
 }
 
 var APPPATHS = {
-		root : 'app/',
-		css  : 'app/css',
-		js   : 'app/js',
-		fonts: 'app/fonts'
+		root  : 'app/',
+		css   : 'app/css',
+		js    : 'app/js',
+		fonts : 'app/fonts',
+		images: 'app/img'
 }
+
+gulp.task('images', function(){
+	return gulp.src(SOURCEPATHS.imgSource)
+	.pipe(newer(APPPATHS.images))
+	.pipe(imagemin())
+	.pipe(gulp.dest(APPPATHS.images));
+});
 
 gulp.task('sass', function(){
 	var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
@@ -70,7 +81,7 @@ gulp.task('fontawesome', function(){
 	.pipe(gulp.dest(APPPATHS.fonts));
 });
 
-gulp.task('watch', ['serve','sass','copy', 'clean-html', 'javascript', 'clean-javascript', 'fontawesome'], function(){
+gulp.task('watch', ['serve','sass','copy', 'clean-html', 'javascript', 'clean-javascript', 'fontawesome', 'images'], function(){
 	gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 	gulp.watch([SOURCEPATHS.htmlSource], ['copy']);
 	gulp.watch([SOURCEPATHS.jsSource], ['javascript']);
